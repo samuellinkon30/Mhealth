@@ -3,19 +3,22 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-// Importe o Vuetify e os estilos necessários
 import 'vuetify/styles/main.css'
-import '@mdi/font/css/materialdesignicons.css' // Importe o arquivo de ícones
+import '@mdi/font/css/materialdesignicons.css' 
+import "qalendar/dist/style.css";
 
-// Importe as funções de criação do Vuetify e os componentes/diretivas necessários
 import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/lib/components'
 import * as directives from 'vuetify/lib/directives'
+import * as components from 'vuetify/components'
+import * as labsComponents from 'vuetify/labs/components'
 
-// Crie a instância do Vuetify
+
 const vuetify = createVuetify({
-    // Adicione os componentes e diretivas do Vuetify
-    components,
+    components: {
+        ...components,
+        ...labsComponents,
+        
+      },
     directives,
 
     // Defina o conjunto padrão de ícones como mdi
@@ -24,9 +27,8 @@ const vuetify = createVuetify({
     }
 })
 
-// Crie o aplicativo Vue usando o Vue Router, Vuex e Vuetify
 createApp(App)
     .use(store)
     .use(router)
-    .use(vuetify) // Use o Vuetify no aplicativo
+    .use(vuetify)
     .mount("#app");

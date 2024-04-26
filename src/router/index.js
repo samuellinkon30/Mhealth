@@ -1,7 +1,17 @@
 import { createRouter, createWebHistory } from "vue-router";
+
+//Agenda
+import Calendar from "@/views/Calendar.vue";
+import Schedule from "@/views/Schedule.vue";
+import WaitingList from "@/views/WaitingList.vue";
+import PanelDay from "@/views/PanelDay.vue"
+
+
 import Login from "../views/Login.vue";
-import Home from "@/views/HomeView.vue";
-import Dashboard from "@/views/Dashboard.vue"
+// import Home from "@/views/HomeView.vue";
+import Dashboard from "@/views/utils/Dashboard.vue";
+import Panel from "@/views/Panel.vue"
+
 
 const routes = [
   {
@@ -16,7 +26,23 @@ const routes = [
     children: [
       {
         path: '/dashboard/home', 
-        component: Home
+        component: Panel
+      },
+      {
+        path: '/dashboard/novo-agendamento', 
+        component: Schedule
+      },
+      {
+        path: '/dashboard/lista-de-espera', 
+        component: WaitingList
+      },
+      {
+        path: '/dashboard/painel-do-dia', 
+        component: PanelDay
+      },
+      {
+        path: '/dashboard/calendario', 
+        component: Calendar
       },
     ]
   },

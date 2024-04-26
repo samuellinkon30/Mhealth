@@ -3,7 +3,7 @@
         <v-footer class="d-flex flex-column"> 
         <div class="px-4 py-2 text-center w-100">
             <!-- <span>Transformando sonhos em realidade</span><br> -->
-            @Copiryth <strong>Mlovi</strong> - {{ new Date().getFullYear() }}
+            @Copyright <strong>Mlovi Multi</strong> - {{ new Date().getFullYear() }}
         </div>
         </v-footer>
     </v-layout>
