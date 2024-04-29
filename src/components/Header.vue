@@ -2,7 +2,7 @@
     <div class="menu">
         <div class="left_side_item">
             <div class="logo">
-                <router-link to="/dashboard">
+                <router-link to="/dashboard/home">
                     <img src="../assets/logomlovibranca.png"/>
                 </router-link>
                 
@@ -51,15 +51,15 @@
                             <v-list class="list_submenu">
                               <v-list-item>
                                 <v-list-item-title>
-                                    <a href="">Novo Paciente</a>
+                                    <router-link to="/dashboard/novo-paciente">Novo Paciente</router-link>
                                 </v-list-item-title>
 
                                 <v-list-item-title>
-                                    <a href="">Buscar Paciente</a>
+                                    <router-link to="/dashboard/pesquisar-paciente">Buscar Paciente</router-link>
                                 </v-list-item-title>
                                 
                                 <v-list-item-title>
-                                    <a href="">Exportar Pacientes</a>
+                                    <router-link to="/dashboard/exportar-paciente">Exportar Pacientes</router-link>
                                 </v-list-item-title>
                                 
                               </v-list-item>
@@ -136,7 +136,7 @@
         <div class="rigth_side_item">
             <div class="actions">
                 <v-icon
-                icon="mdi-bell-alert-outline"
+                icon="mdi-bell-badge-outline"
                 size="large"
                 color="white"
               ></v-icon>
@@ -179,7 +179,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
 .left_side_item{
     display: flex;
     gap: 20px;

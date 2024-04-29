@@ -1,6 +1,6 @@
 <template>
-    <div class="global_newSchedule">
-      Panel day
+    <div class="">
+       Export Patient
     </div>
     
 </template>

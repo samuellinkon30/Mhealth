@@ -1,11 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 //Agenda
-import Calendar from "@/views/Calendar.vue";
-import Schedule from "@/views/Schedule.vue";
-import WaitingList from "@/views/WaitingList.vue";
-import PanelDay from "@/views/PanelDay.vue"
+import Calendar from "@/views/schedule/Calendar.vue";
+import Schedule from "@/views/schedule/Schedule.vue";
+import WaitingList from "@/views/schedule/WaitingList.vue";
+import PanelDay from "@/views/schedule/PanelDay.vue"
 
+//Pacientes
+import NewPatient from "@/views/patient/NewPatient.vue";
+import SearchPatient from "@/views/patient/SearchPatient.vue";
+import ExportPatient from "@/views/patient/ExportPatient.vue";
 
 import Login from "../views/Login.vue";
 // import Home from "@/views/HomeView.vue";
@@ -43,6 +47,18 @@ const routes = [
       {
         path: '/dashboard/calendario', 
         component: Calendar
+      },
+      {
+        path: '/dashboard/novo-paciente', 
+        component: NewPatient
+      },
+      {
+        path: '/dashboard/pesquisar-paciente', 
+        component: SearchPatient
+      },
+      {
+        path: '/dashboard/exportar-paciente', 
+        component: ExportPatient
       },
     ]
   },

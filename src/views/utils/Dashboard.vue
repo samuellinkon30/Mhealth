@@ -29,4 +29,14 @@ import Header from "@/components/Header.vue";
     }
   }
   </script>
+
+<style scoped>
+.content.dashboard {
+  position: relative;
+  height: 90vh;
+}
+.content.dashboard {
+  background-color: #f2f2f2;
+}
+</style>
   

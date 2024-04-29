@@ -1,5 +1,5 @@
 <template>
-    <div class="global_newSchedule">
+    <div class="">
         Lista de espera
     </div>
     
