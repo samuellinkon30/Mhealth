@@ -12,7 +12,7 @@
           >
           <img class="logo" src="../assets/logomlovi.png">
             <v-text-field
-              v-model="name"
+              v-model="email"
               :counter="10"
               :rules="nameRules"
               label="Usuário"
@@ -21,7 +21,7 @@
             >
         </v-text-field>
         <v-text-field
-            v-model="paswword"
+            v-model="password"
             :counter="10"
             :rules="nameRules"
             label="Senha"
@@ -64,24 +64,36 @@
   </template>
   
   <script>
+import api from "@/utils/login.js"
+import { mapState, mapActions } from "vuex"
+
   export default {
     data(){
         return{
-            name:'',
-            paswword:'',
+            email:'',
+            password:'',
             isActive:false
         }
     },
     methods: {
-      onSubmit() {
-        if(this.name=="user" && this.paswword=="1234"){
-          this.redirectTo('/dashboard/home')
-        } else {
-          this.isActive = true
+      ...mapActions(["login"]),
+
+      async onSubmit() {
+        const obj = {
+          'email':this.email,
+          'password': this.password,
+        }
+        try {
+          const response = await api.login(obj);
+          console.log(response);
+          this.login(response.token);
+        } catch (error) {
+          console.error('Erro ao realizar login');
         }
       },
       redirectTo(path) {
         this.$router.push(path);
+        this.redirectTo('/dashboard/home')
       }
     }
   }
