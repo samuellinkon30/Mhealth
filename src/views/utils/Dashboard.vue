@@ -32,11 +32,11 @@ import Header from "@/components/Header.vue";
 
 <style scoped>
 .content.dashboard {
-  position: relative;
-  height: 90vh;
-}
-.content.dashboard {
   background-color: #f2f2f2;
+  position: relative;
+  min-height: 90vh;
+  padding-bottom: 5%;
 }
+
 </style>
   

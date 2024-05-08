@@ -6,7 +6,7 @@ export default{
             const headers = {
                 'Content-Type': 'application/json', 
             };
-            const response = await api.post(`/api/login/`, payload, {
+            const response = await api.post(`/autenticacao`, payload, {
                 headers,
             });
             return response.data;

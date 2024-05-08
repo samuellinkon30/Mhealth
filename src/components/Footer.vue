@@ -32,6 +32,7 @@ footer.v-footer.v-theme--light.d-flex.flex-column {
     bottom: 0;
     padding: 0;
     margin: 0;
+    z-index: 2;
 }
 .v-layout.footer > footer {
     background-color: #33265d !important;

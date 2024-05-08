@@ -1,12 +1,12 @@
 <template>
     <div class="">
-       calendar
+       <Calendar></Calendar>
     </div>
     
 </template>
 
 <script>
-
+import Calendar from "@/components/Calendar.vue"
 
 export default{
     data(){
@@ -15,7 +15,7 @@ export default{
         }
     },
     components:{
-       
+        Calendar
     }
 }
 </script>
