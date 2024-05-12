@@ -182,8 +182,7 @@
 <style scoped>
 .left_side_item{
     display: flex;
-    gap: 20px;
-    align-items: center
+    align-items: center;
 }
 .menu{
     display: flex;
@@ -191,6 +190,7 @@
     background-color: #33265d;
     align-items: center;
     padding: 5px 0px;
+    height: 45px;
 }
 .logo {
     display: flex;
@@ -234,7 +234,7 @@
 }
 .left_side_item {
     display: flex;
-    gap: 50px;
+    gap: 5px;
     align-items: center;
     margin-left: 25px;
 }
@@ -242,9 +242,9 @@ button.v-btn.v-btn--elevated.v-theme--light.v-btn--density-default.v-btn--size-d
     background-color: transparent;
     color: white;
     font-weight: 600;
-    width: 150px;
     height: 45px;
     border-radius: 0 !important;
+    font-size: 11px;
 }
 .list_submenu {
     background-color: #33265d !important;

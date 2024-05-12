@@ -618,6 +618,8 @@ import Loader from "@/components/utils/Loader.vue"
 <style>
 .content.dashboard {
   width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 .global_patient {
   display: flex;

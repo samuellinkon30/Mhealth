@@ -87,7 +87,7 @@ import { mapState, mapActions } from "vuex"
           const response = await api.login(obj);
           console.log(response);
           this.login(response.token);
-          this.$router.push({ path: '/dashboard/' })
+          this.$router.push({ path: '/dashboard/home' })
         } catch (error) {
           console.error('Erro ao realizar login');
         }

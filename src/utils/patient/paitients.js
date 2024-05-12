@@ -31,4 +31,26 @@ export default{
             throw error;
         }
     },
+    async getDataPatienteByHash(accessToken, id, type){
+        try {
+            const headers = {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json', 
+            };
+            if(type=="cpf"){
+                const response = await api.get(`/pacientes?cpf=${id}` , {
+                    headers,
+                });
+            } else {
+                const response = await api.get(`/pacientes?nome=${id}` , {
+                    headers,
+                });
+            }
+            
+            return response.data;
+        } catch (error) {
+            console.error(`Erro ao carregar Paciente: ${id}`, error);
+            throw error;
+        }
+    },
 }

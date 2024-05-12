@@ -10,6 +10,9 @@ import * as directives from 'vuetify/lib/directives'
 import * as components from 'vuetify/lib/components'
 import * as labsComponents from 'vuetify/lib/labs'
 
+import Plugin from '@quasar/quasar-ui-qcalendar'
+import '@quasar/quasar-ui-qcalendar/dist/index.css'
+
 import 'vuetify/styles/main.css'
 import '@mdi/font/css/materialdesignicons.css'
 
@@ -24,9 +27,11 @@ const vuetify = createVuetify({
     }
 })
 
-createApp(App)
-    .use(store)
-    .use(VueTheMask)
-    .use(router)
-    .use(vuetify)
-    .mount("#app");
+const app = createApp(App)
+
+app.use(store)
+app.use(VueTheMask)
+app.use(router)
+app.use(vuetify)
+app.use(Plugin) // Importe o Plugin do qCalendar aqui
+app.mount("#app");

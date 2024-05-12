@@ -84,6 +84,15 @@ export default{
         ...mapState(['token'])
     },
     methods:{
+        async getDataPacienteByHash(){
+            try {
+                const response = await api.getListPatientes(this.token, id, type);
+                console.debug(response);
+                this.data = response
+            } catch (error) {
+                console.error('Erro ao gerar lista de pacientes.')
+            }
+        },
         async getListPatientes(){
             try {
                 const response = await api.getListPatientes(this.token);
