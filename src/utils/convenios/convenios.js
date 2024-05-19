@@ -1,18 +1,18 @@
 import api from '../api'
 
 export default{
-    async getListAtendimentos(accessToken, especialidade, especialista){
+    async getListConvenios(accessToken){
         try {
             const headers = {
                 Authorization: `Bearer ${accessToken}`,
                 'Content-Type': 'application/json', 
             };
-            const response = await api.get(`/atendimentos?id_especialidade=${especialidade}&id_funcionario=${especialista}` , {
+            const response = await api.get(`/convenios` , {
                 headers,
             });
             return response.data;
         } catch (error) {
-            console.error('Erro ao Carregar Listagem de Pacientes', error);
+            console.error('Erro ao Carregar Listagem de Convênios', error);
             throw error;
         }
     },

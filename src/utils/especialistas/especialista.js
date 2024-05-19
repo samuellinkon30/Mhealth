@@ -1,20 +1,21 @@
 import api from '../api'
 
 export default{
-    async getListAtendimentos(accessToken, especialidade, especialista){
+    async getListEspecialistas(accessToken){
         try {
             const headers = {
                 Authorization: `Bearer ${accessToken}`,
                 'Content-Type': 'application/json', 
             };
-            const response = await api.get(`/atendimentos?id_especialidade=${especialidade}&id_funcionario=${especialista}` , {
+            const response = await api.get(`/funcionarios?especialista=1` , {
                 headers,
             });
             return response.data;
         } catch (error) {
-            console.error('Erro ao Carregar Listagem de Pacientes', error);
+            console.error('Erro ao Carregar Listagem de Especialidades', error);
             throw error;
         }
     },
+    
 
 }

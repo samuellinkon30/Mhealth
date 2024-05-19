@@ -1,106 +1,95 @@
 <template>
-  <FullCalendar 
-    :options="calendarOptions" 
-  />
+  <FullCalendar :options="calendarOptions" ref="calendar" :class="[showHorarioLivre? 'calendarFreeTime fc fc-media-screen fc-direction-ltr fc-theme-standard':'calendar fc fc-media-screen fc-direction-ltr fc-theme-standard']" />
   <div v-show="show" class="modal">
     <div class="modal-content">
       <span class="close" @click="closeModal">&times;</span>
       <h2>{{ modalEvent.title }}</h2>
-      <p>{{ modalEvent.description }}</p>
+      <div v-html="modalEvent.content"></div>
     </div>
   </div>
 </template>
 
 <script>
-import FullCalendar from '@fullcalendar/vue3'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import { mapState } from 'vuex'
-import api from '@/utils/atendimentos/atendimento.js'
+import FullCalendar from '@fullcalendar/vue3';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import listPlugin from '@fullcalendar/list';
+import interactionPlugin from '@fullcalendar/interaction';
+import { mapState } from 'vuex';
+import api from '@/utils/atendimentos/atendimento.js';
+
+import tippy from 'tippy.js';
 
 export default {
   components: {
-    FullCalendar // torna a tag <FullCalendar> disponível
+    FullCalendar
+  },
+  props: {
+    showFreeTimeProps: Boolean,
+    especialidade: Number,
+    especialista: Number
   },
   data() {
     return {
+      showHorarioLivre: false,
       calendarOptions: {
-        plugins: [interactionPlugin, timeGridPlugin, dayGridPlugin], 
+        plugins: [interactionPlugin, timeGridPlugin, dayGridPlugin, listPlugin],
         initialView: 'dayGridMonth',
-        weekends: false,
+        weekends: true,
         locale: 'pt-br',
         selectable: true,
         dateClick: this.handleDateClick,
-        eventClick: this.handleEventClick, 
+        eventClick: this.handleEventClick,
+        navLinks: true,
+        nowIndicator: true,
+        slotMinTime: '08:00',
+        slotMaxTime: '21:00',
         headerToolbar: {
-        left: 'prev,next',
-        center: 'title',
-        right: 'dayGridWeek,dayGridDay,dayGridMonth'
-      },
-        events: [  
-          {
-            title: 'Evento Exemplo',
-            start: '2024-05-01', 
-            description: 'Descrição do evento exemplo',
-            // { label: 'Título', value: arg.event.title },
-            // { label: 'Data de início', value: arg.event.start },
-            // { label: 'Data de fim', value: arg.event.end },
-            // { label: 'Descrição', value: arg.event.extendedProps.description },
-            // { label: 'backgroundColor', value: arg.event.backgroundColor },
-            // { label: 'borderColor', value: arg.event.borderColor },
-            // { label: 'allDay', value: arg.event.allDay },
-            // { label: 'allow', value: arg.event.allow },
-            // { label: 'classNames', value: arg.event.classNames },
-            // { label: 'constraint', value: arg.event.constraint },
-            // { label: 'display', value: arg.event.display },
-            // { label: 'durationEditable', value: arg.event.durationEditable },
-            // { label: 'endStr', value: arg.event.endStr },
-            // { label: 'groupId', value: arg.event.groupId },
-            // { label: 'id', value: arg.event.id },
-            // { label: 'overlap', value: arg.event.overlap },
-            // { label: 'source', value: arg.event.source },
-            // { label: 'startEditable', value: arg.event.startEditable },
-            // { label: 'startStr', value: arg.event.startStr },
-            // { label: 'textColor', value: arg.event.textColor },
-            // { label: 'url', value: arg.event.url }
-            
-          }
-        ],
+          left: 'prev,next',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,listWeek,timeGridDay'
+        },
+        buttonText: {
+          today: 'Hoje',
+          month: 'Mês',
+          week: 'Semana',
+          day: 'Dia',
+          list: 'Lista'
+        },
+        events: [],
       },
       modalOpen: false,
-      show:false,
       modalEvent: {
         title: '',
-        description: ''
+        content: ''
       }
-    }
+    };
   },
-  computed:{
+  computed: {
     ...mapState(['token'])
   },
   methods: {
-    async getAtendimentos(){
+    async getAtendimentos() {
       try {
-        const response = await api.getListAtendimentos(this.token);
+        const response = await api.getListAtendimentos(this.token, this.especialidade, this.especialista);
         console.log(response);
         this.dataAtendimentos = response;
+        this.addEvents(response);
       } catch (error) {
-        
+        console.error('Erro ao obter os atendimentos:', error);
       }
     },
     handleDateClick(arg) {
       // Aqui você pode fazer o que desejar quando uma data é clicada
     },
     handleEventClick(arg) {
-      this.show=true;
+      this.show = true;
       this.openModal(arg.event);
       console.log('Título do evento clicado:', arg.event.title);
     },
     toggleView() {
-      console.log(this.calendarOptions.initialView )
       if (this.calendarOptions.initialView === 'dayGridMonth') {
-        this.calendarOptions.initialView = 'timeGridDay'; // Correção: 'timeGridDay'
+        this.calendarOptions.initialView = 'timeGridDay';
       } else {
         this.calendarOptions.initialView = 'dayGridMonth';
       }
@@ -112,77 +101,117 @@ export default {
     closeModal() {
       this.show = false;
       this.modalEvent.title = '';
-      this.modalEvent.description = '';
+      this.modalEvent.content = '';
     },
     openModal(event) {
       this.modalOpen = true;
       this.modalEvent.title = event.title;
-      this.modalEvent.description = event.extendedProps.description;
+      this.modalEvent.content = `<p>${event.extendedProps.description}</p>`;
+      tippy(event.el, {
+        content: event.extendedProps.description,
+        placement: 'top',
+        animation: 'shift-toward',
+      });
     },
-    addEvents(data){
+    addEvents(data) {
       let events = [];
+      let startTime = '09:00'; // Hora de início do dia
+      let endTime = '18:00'; // Hora de término do dia
+      let interval = 60; // Intervalo de 1 hora em minutos
 
-      data.forEach(element => {
+      // Adiciona os eventos dos atendimentos
+      data.forEach(item => {
+        console.log(item.data + ' ' + item.horario);
         events.push({
-          title: `Consulta Exemplo - ${d.getDate()}`,
-          start: new Date(d.getFullYear(), d.getMonth(), d.getDate()),
-          description: 'Descrição do evento exemplo',
+          title: item.marcacao.paciente.nome,
+          start: item.data + ' ' + item.horario,
+          end: item.data + ' ' + item.horario, // Duração de 1 hora
+          content: `${item.marcacao.paciente.nome}`, // Adicionar a descrição como conteúdo HTML
           backgroundColor: 'red',
-          allow: 'true'
+          allow: true,
+          className: 'horario-prenchido',
         });
       });
-      this.calendarOptions.events = events;
-    },
-    generateEvents() {
-      const firstDay = new Date();
-      firstDay.setDate(1);
 
-      // Obtém o último dia do mês atual
-      const lastDay = new Date(firstDay.getFullYear(), firstDay.getMonth() + 1, 0);
+      // Adiciona eventos "horário livre" nos horários disponíveis para todos os dias do mês
+      let currentDate = new Date();
+      let firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      let lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
 
-      // Array para armazenar os eventos
-      let events = [];
-
-      // Itera sobre todos os dias do mês
-      for (let d = new Date(firstDay); d <= lastDay; d.setDate(d.getDate() + 1)) {
-        // Cria um evento para cada dia
-        events.push({
-          title: `Consulta Exemplo - ${d.getDate()}`,
-          start: new Date(d.getFullYear(), d.getMonth(), d.getDate()),
-          description: 'Descrição do evento exemplo',
-          backgroundColor: 'red',
-          allow: 'true'
-        });
-
-        events.push({
-          title: `Consulta Exemplo 2 - ${d.getDate()}`,
-          start: new Date(d.getFullYear(), d.getMonth(), d.getDate()),
-          description: 'Descrição do evento exemplo',
-          backgroundColor: 'blue'
-          
-        });
-        events.push({
-          title: `Consulta Exemplo 3 - ${d.getDate()}`,
-          start: new Date(d.getFullYear(), d.getMonth(), d.getDate()),
-          description: 'Descrição do evento exemplo',
-          backgroundColor: 'purple'
-        });
+      let currentDay = new Date(firstDay);
+      while (currentDay <= lastDay) {
+        let currentTime = new Date('2000-01-01T' + startTime); // Inicializa a hora do dia
+        let endOfDay = new Date('2000-01-01T' + endTime); // Hora de término do dia
+        while (currentTime <= endOfDay) {
+          let found = events.some(event => {
+            let eventTime = new Date(event.start);
+            return eventTime.getDate() === currentDay.getDate() &&
+              eventTime.getHours() === currentTime.getHours() &&
+              eventTime.getMinutes() === currentTime.getMinutes();
+          });
+          if (!found) {
+            let timeStr = `${String(currentTime.getHours()).padStart(2, '0')}:${String(currentTime.getMinutes()).padStart(2, '0')}`;
+            events.push({
+              title: 'Horário Livre',
+              start: this.formatDate(currentDay) + ' ' + timeStr,
+              end: this.formatDate(currentDay) + ' ' + timeStr, // Duração de 1 hora
+              className: 'horario-livre', // Adiciona uma classe para os eventos "horário livre"
+              backgroundColor: 'green',
+              allow: true
+            });
+          }
+          currentTime.setMinutes(currentTime.getMinutes() + interval);
+        }
+        currentDay.setDate(currentDay.getDate() + 1); // Avança para o próximo dia
       }
 
       this.calendarOptions.events = events;
+    },
+    addMinutes(time, minutes) {
+      let [hours, mins] = time.split(':').map(Number);
+      mins += minutes;
+      hours += Math.floor(mins / 60);
+      mins %= 60;
+      return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
+    },
+    formatDate(date) {
+      let dd = String(date.getDate()).padStart(2, '0');
+      let mm = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
+      let yyyy = date.getFullYear();
+      return yyyy + '-' + mm + '-' + dd;
+    },
+    toggleHorarioLivre() {
+      this.showFreeTime = !this.showFreeTime;
+      this.showHorarioLivre = !this.showHorarioLivre;
+      let calendarApi = this.$refs.calendar.getApi();
+      let events = calendarApi.getEvents();
+      for (let i = 0; i < events.length; i++) {
+        if (events[i].className && events[i].className.includes('horario-livre')) {
+          events[i].display = this.showHorarioLivre ? 'auto' : 'none';
+        }
+      }
+      calendarApi.refetchEvents();
     }
   },
   mounted() {
-   this.generateEvents();
-  // this.getAtendimentos();
+    this.getAtendimentos();
   },
-  created(){
-    // this.getAtendimentos();
+  watch: {
+    showFreeTimeProps(novovalor) {
+      this.showHorarioLivre = novovalor;
+    },
+    especialidade(newValue) {
+      this.getAtendimentos();
+    },
+    especialista(newValue) {
+      this.getAtendimentos();
+    }
   }
-}
+};
 </script>
 
-<style scoped>
+
+<style >
 .modal {
   position: fixed;
   z-index: 1;
@@ -215,4 +244,11 @@ export default {
   text-decoration: none;
   cursor: pointer;
 }
+.calendar .horario-livre {
+  display: none;
+}
+.calendarFreeTime .horario-prenchido{
+  display: none;
+}
+
 </style>

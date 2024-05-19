@@ -53,4 +53,19 @@ export default{
             throw error;
         }
     },
+    async createPatiente(accessToken, payload){
+        try {
+            const headers = {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json', 
+            };
+            const response = await api.post(`/pacientes` , payload, {
+                headers,
+            });
+            return response.data;
+        } catch (error) {
+            console.error(`Erro ao criar paciente}`, error);
+            throw error;
+        }
+    },
 }
